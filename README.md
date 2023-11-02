@@ -145,3 +145,4 @@ _Add API that supports following requirements:_
   explain it to the rest of your team)
   - Max 25 pr. request
   - Max 10 requests pr. seconds
+
