@@ -15,5 +15,5 @@ export function handleErrorMiddleware(error: Error, _: Request, res: Response, n
     res.status(500).send({ message: "Internal Server Error" });
   }
 
-  next();
+  next(res);
 }

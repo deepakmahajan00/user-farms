@@ -29,6 +29,7 @@ function swaggerDocs(app: Express) {
   // Docs in JSON format
   app.get("/docs.json", (_: Request, res: Response) => {
     res.setHeader("Content-Type", "application/json");
+    res.setHeader("Accept", "application/json");
     res.send(swaggerSpec);
   });
 

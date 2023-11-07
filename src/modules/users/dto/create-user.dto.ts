@@ -1,4 +1,5 @@
-import { IsEmail, IsNotEmpty, IsString } from "class-validator";
+import { IsEmail, IsNotEmpty, ValidateNested, IsString, IsDefined } from "class-validator";
+import { CreateAddressDto } from "modules/addresses/dto/create-address.dto";
 
 /**
  * @openapi
@@ -9,6 +10,7 @@ import { IsEmail, IsNotEmpty, IsString } from "class-validator";
  *      required:
  *        - email
  *        - password
+ *        - address
  *      properties:
  *        email:
  *          type: string
@@ -16,6 +18,8 @@ import { IsEmail, IsNotEmpty, IsString } from "class-validator";
  *        password:
  *          type: string
  *          default: password
+ *        address:
+ *            $ref: '#/components/schemas/CreateAddressDto'
  */
 export class CreateUserDto {
   @IsEmail()
@@ -25,4 +29,9 @@ export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
   public password: string;
+
+  @IsNotEmpty()
+  @ValidateNested()
+  @IsDefined()
+  public address: CreateAddressDto;
 }

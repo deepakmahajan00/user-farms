@@ -11,22 +11,27 @@ export type ExtendedRequest = Request & {
 export const authMiddleware = async (req: ExtendedRequest, _: Response, next: NextFunction): Promise<void> => {
   const authService = new AuthService();
 
-  if (!req.headers.authorization) {
-    throw new UnauthorizedError();
+  try {
+    if (!req.headers.authorization) {
+      throw new UnauthorizedError();
+    }
+  
+    const token = req.headers.authorization.split(" ")[1];
+    const verifiedToken = await verifyAsync(token);
+  
+    if (!verifiedToken) {
+      throw new UnauthorizedError();
+    }
+  
+    const existingToken = await authService.getAccessToken(token);
+  
+    req.user = existingToken.user;
+  
+    next();
+  } catch (error) {
+    next(error);
   }
-
-  const token = req.headers.authorization.split(" ")[1];
-  const verifiedToken = await verifyAsync(token);
-
-  if (!verifiedToken) {
-    throw new UnauthorizedError();
-  }
-
-  const existingToken = await authService.getAccessToken(token);
-
-  req.user = existingToken.user;
-
-  next();
+  
 };
 
 const verifyAsync = async (token: string): Promise<JwtPayload> =>

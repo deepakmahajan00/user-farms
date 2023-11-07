@@ -16,6 +16,7 @@ const usersController = new UsersController();
  *      content:
  *        application/json:
  *           schema:
+ *              type: object
  *              $ref: '#/components/schemas/CreateUserDto'
  *     responses:
  *      201:

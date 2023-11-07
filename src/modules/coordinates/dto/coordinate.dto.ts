@@ -1,27 +1,26 @@
 import { Expose, Transform } from "class-transformer";
-import { User } from "../../users/entities/user.entity";
-import { AddressDto } from "modules/addresses/dto/address.dto";
+import { Coordinate } from "../entities/coordinate.entity";
 
 /**
  * @openapi
  * components:
  *  schemas:
- *    UserDto:
+ *    CoordinateDto:
  *      type: object
  *      properties:
  *        id:
  *          type: string
- *        email:
- *          type: string
- *        address:
- *          type: AddressDto
+ *        latitude:
+ *          type: number
+ *        longitude:
+ *          type: number
  *        createdAt:
  *          type: string
  *        updatedAt:
  *          type: string
  */
-export class UserDto {
-  constructor(partial?: Partial<UserDto>) {
+export class CoordinateDto {
+  constructor(partial?: Partial<CoordinateDto>) {
     Object.assign(this, partial);
   }
 
@@ -29,10 +28,10 @@ export class UserDto {
   public readonly id: string;
 
   @Expose()
-  public email: string;
+  public latitude: number;
 
   @Expose()
-  public address: AddressDto;
+  public longitude: number;
 
   @Transform(({ value }) => (value as Date).toISOString())
   @Expose()
@@ -42,11 +41,11 @@ export class UserDto {
   @Expose()
   public updatedAt: Date;
 
-  public static createFromEntity(user: User | null): UserDto | null {
-    if (!user) {
+  public static createFromEntity(coordinate: Coordinate | null): CoordinateDto | null {
+    if (!coordinate) {
       return null;
     }
 
-    return new UserDto({ ...user });
+    return new CoordinateDto({ ...coordinate });
   }
 }
