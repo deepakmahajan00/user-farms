@@ -69,7 +69,7 @@ export class ListFarmDto {
   }
 
   private static refactorData(farm: ListFarmDto[]) {
-    let responseDto: { 
+    const responseDto: { 
         name: string,
         owner: string,
         size: number,
@@ -80,18 +80,18 @@ export class ListFarmDto {
 
     farm.forEach((data, index) => {
         responseDto[index] = {
-            'name': data.name,
-            'owner': data.email,
-            'size': data.size,
-            'yield': data.yield,
-            'address': {
-                'street': data.street,
-                'city': data.city,
-                'country': data.city,
-                'latitude': data.fc_latitude,
-                'longitude': data.fc_longitude
+            "name": data.name,
+            "owner": data.email,
+            "size": data.size,
+            "yield": data.yield,
+            "address": {
+                "street": data.street,
+                "city": data.city,
+                "country": data.city,
+                "latitude": data.fc_latitude,
+                "longitude": data.fc_longitude
             },
-            'driving_distance': data.driving_distance,
+            "driving_distance": data.driving_distance,
         }
     });
     return responseDto;

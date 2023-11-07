@@ -6,12 +6,6 @@ import { CreateFarmDto } from "./dto/create-farm.dto";
 
 export class FarmsController {
   private readonly farmsService: FarmsService;
-  // private readonly sortType = {
-  //   'name' : 'name',
-  //   'date': 'createdAt',
-  //   'driving_distance': 'driving_distance'
-  // };
-
   constructor() {
     this.farmsService = new FarmsService();
   }
@@ -27,7 +21,7 @@ export class FarmsController {
 
   public async list(req: Request, res: Response, next: NextFunction) {
     try {
-      var query = require('url').parse(req.url,true).query;
+      let query = require('url').parse(req.url,true).query;
       //const sortBy = this.getSortBy(req);
       const outlierCondition = await this.getOutlier(query.outliers);
       const farm = await this.farmsService.fetchAllFarms(query.sort, outlierCondition, query.page, query.pageSize);
