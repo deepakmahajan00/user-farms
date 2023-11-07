@@ -16,6 +16,8 @@ import { Expose } from "class-transformer";
  *        yield:
  *          type: number
  *        address:
+ *          type: object
+ *        driving_distance:
  *          type: string
  */
 export class ListFarmDto {

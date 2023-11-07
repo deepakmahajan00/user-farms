@@ -157,7 +157,6 @@ export class FarmsService {
 
           let allFarms = await this.addDrivingDistanceToFarm(farms)
 
-          console.log(allFarms);
           // Add sort on final output. 
           // I know performance wise its not better do here, but we have 3 different type of sorts. In this case I feel this is the wise way
           return this.sortResult(allFarms, sortBy);

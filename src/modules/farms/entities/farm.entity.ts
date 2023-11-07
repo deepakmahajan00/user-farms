@@ -22,7 +22,7 @@ export class Farm {
 
   @OneToOne(() => Address)
   @JoinColumn()
-  address: Address;
+  public address: Address;
 
   @CreateDateColumn()
   public createdAt: Date;

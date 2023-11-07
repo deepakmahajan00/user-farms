@@ -24,5 +24,5 @@ export class User {
   public updatedAt: Date;
 
   @OneToMany(() => Farm, farm => farm.user)
-  farms: Farm[];
+  public farms: Farm[];
 }

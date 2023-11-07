@@ -6,10 +6,10 @@ export class Coordinate {
   public readonly id: string;
 
   @Column('decimal', { precision: 2, scale: 8 })
-  latitude: number;
+  public latitude: number;
 
   @Column('decimal', { precision: 2, scale: 8 })
-  longitude: number;
+  public longitude: number;
 
   @CreateDateColumn()
   public createdAt: Date;

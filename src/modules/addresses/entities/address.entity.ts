@@ -18,7 +18,7 @@ export class Address {
 
   @OneToOne(() => Coordinate)
   @JoinColumn()
-  coordinate: Coordinate;
+  public coordinate: Coordinate;
 
   @CreateDateColumn()
   public createdAt: Date;
@@ -27,5 +27,5 @@ export class Address {
   public updatedAt: Date;
 
   @OneToMany(() => User, user => user.address)
-  users: User[];
+  public users: User[];
 }
