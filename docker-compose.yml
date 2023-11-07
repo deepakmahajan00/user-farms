@@ -2,12 +2,12 @@ version: "3.7"
 
 services:
   postgres:
-    container_name: agreena-postgres
+    container_name: postgres
     image: postgres
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: agreena-hw, agreena-hw-test
+      POSTGRES_DB: userfarms-hw, userfarms-hw-test
       PGDATA: /.data/postgres
     volumes:
       - postgres:/.data/postgres
@@ -19,7 +19,7 @@ services:
       - postgres
 
   pgadmin:
-    container_name: agreena_pg-admin
+    container_name: pg-admin
     image: dpage/pgadmin4
     environment:
       PGADMIN_DEFAULT_EMAIL: postgres@gmail.com

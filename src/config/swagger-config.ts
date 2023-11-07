@@ -7,9 +7,9 @@ const options = {
   definition: {
     openapi: "3.1.0",
     info: {
-      title: "Agreena recruitment task",
+      title: "User Farms",
       version: "0.1.0",
-      description: "This is a simple boilerplate for Agreena recruitment task made with Express and documented with Swagger",
+      description: "This is a simple boilerplate for user farms with Express and documented with Swagger",
     },
     servers: [
       {
