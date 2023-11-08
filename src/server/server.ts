@@ -11,6 +11,8 @@ export function setupServer(): Express {
 
   app.use("/api", routes);
 
+  
+
   app.use(handleErrorMiddleware);
 
   swaggerDocs(app);

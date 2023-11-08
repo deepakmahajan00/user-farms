@@ -22,7 +22,6 @@ export class FarmsController {
   public async list(req: Request, res: Response, next: NextFunction) {
     try {
       let query = require('url').parse(req.url,true).query;
-      //const sortBy = this.getSortBy(req);
       const outlierCondition = await this.getOutlier(query.outliers);
       const farm = await this.farmsService.fetchAllFarms(query.sort, outlierCondition, query.page, query.pageSize);
       const listFarmDto = ListFarmDto.createFromEntity(farm);
@@ -35,15 +34,4 @@ export class FarmsController {
   private async getOutlier(outlier: any): Promise<boolean> {
     return (outlier == 'false') ? false : true;
   }
-
-  // private getSortBy(req: Request) {
-  //   const sort = req.query.sort;
-  //   let sortBy = this.sortType.name
-  //   if (sort == 'date') {
-  //     sortBy = this.sortType.date
-  //   } else if (sort == 'driving_distance') {
-  //     sortBy = this.sortType.driving_distance
-  //   }
-  //   return sortBy;
-  // }
 }

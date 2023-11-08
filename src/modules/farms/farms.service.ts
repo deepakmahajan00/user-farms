@@ -27,30 +27,6 @@ export class FarmsService {
     this.usersService = new UsersService();
   }
 
-  /*public async getAllFarm(sortBy: string = 'name'): Promise<Farm[] | []> {
-    if (sortBy === 'date') {
-      sortBy = 'createdAt';
-    }
-    
-    const farms = await this.farmsRepository.find({
-      relations: {  
-        user: {
-          address: {
-            coordinate: true
-          }
-        },
-        address: {
-          coordinate: true
-        }
-      },
-      order: {
-        name: 'ASC'
-      }
-
-    });
-    return farms;
-  }*/
-
   public async fetchAllFarms(
     sortBy: string = 'name',
     outlierCondition: boolean = true,
@@ -66,61 +42,6 @@ export class FarmsService {
     );
     return farms;
   }
-
-  /*
-  public async findAll(sortBy: string, outlierCondition: true | false, page: number = 1, pageSize: number = 10) {
-    try {
-      let rawQuery = `
-        SELECT * FROM 
-          (
-            SELECT
-              f.name AS name,
-              f.size AS size,
-              f.yield AS yield,
-              -- f.createdAt as cdate,
-              u.email AS email, 
-              fa.street AS street,
-              fa.city AS city,
-              fa.country AS country,
-              fc.latitude AS f_latitude,
-              fc.longitude AS f_longitude,
-              uc.latitude AS u_latitude,
-              uc.longitude AS u_longitude,
-              (SELECT AVG("yield")*0.3 FROM "farm" "aa") AS "avg_yield",
-              (SELECT size FROM "farm" "ab" WHERE ab.id = "f"."id") AS "driving_distance" 
-            FROM "farm" AS "f"
-            LEFT JOIN "user" AS "u" ON "u"."id"="f"."userId"
-            LEFT JOIN "address" AS "fa" ON "fa"."id"="f"."addressId"
-            LEFT JOIN "coordinate" AS "fc" ON "fc"."id"="fa"."coordinateId"
-            LEFT JOIN "address" AS "ua" ON "ua"."id"="u"."addressId" 
-            LEFT JOIN "coordinate" as "uc" ON "uc"."id"="ua"."coordinateId") "fd"
-      `;
-      // Outlier condition
-      rawQuery = this.addOutlierCondition(rawQuery, outlierCondition);
-      rawQuery = this.addLimitAndOffset(rawQuery, page, pageSize);
-      
-      const result = await this.farmsRepository.query(rawQuery);
-      let farms = await this.addDrivingDistanceToFarm(result)
-      return this.sortResult(farms, sortBy);
-    } catch (error) {
-      console.log(error)
-    }
-    return [];
-  }
-
-  private addOutlierCondition(rawQuery: string, outlierCondition: true | false) {
-    return rawQuery += outlierCondition ? `WHERE yield > avg_yield` : `WHERE yield < avg_yield`;
-  }
-
-  private addLimitAndOffset(rawQuery: string, page: number = 1, pageSize: number = 10) {
-    if (page > 1) {
-      rawQuery += ` LIMIT ` + pageSize + ` OFFSET ` + page;
-    } else {
-      rawQuery += ` LIMIT ` + pageSize;
-    }
-    return rawQuery;
-  }
- */
   
   public async findAll(sortBy: string, outlierCondition: true | false, page: number = 1, pageSize: number = 10) {
     try {
@@ -148,15 +69,18 @@ export class FarmsService {
           .select("*")
           .from("(" + userQb.getQuery() + ")", "d");
 
+          console.log(outlierCondition);
           // Outlier condition
-          outlierCondition ? result.where("yield > avg_yield") : result.where("yield < avg_yield");
+          //outlierCondition ? result.where("yield > avg_yield") : result.where("yield < avg_yield");
           
-          const farms = await result.offset((pageSize * page) - pageSize)
+          console.log(result.getQuery());
+          const farms = await result
+           .offset((pageSize * page) - pageSize)
            .limit(pageSize)
            .getRawMany();
 
           let allFarms = await this.addDrivingDistanceToFarm(farms)
-
+          console.log(allFarms);
           // Add sort on final output. 
           // I know performance wise its not better do here, but we have 3 different type of sorts. In this case I feel this is the wise way
           return this.sortResult(allFarms, sortBy);
@@ -169,7 +93,7 @@ export class FarmsService {
   private sortResult(farms: any, sortBy: string) {
     if (sortBy == "driving_distance") {
       return this.sortByDrivingDistance(farms);
-    } else if (sortBy.includes("date")) {
+    } else if (sortBy == "date") {
       return this.sortByNewlyCreatedFarm(farms);
     } else {
       return this.sortByFarmNameASC(farms);
@@ -187,8 +111,8 @@ export class FarmsService {
 
   private sortByNewlyCreatedFarm(farms: any) {
     farms.sort((a: any, b: any) => {
-      var valueA = a.farm_createdAt;
-      var valueB = b.farm_createdAt;
+      var valueA = a.f_createdAt;
+      var valueB = b.f_createdAt;
       return valueB - valueA;
     });
     return farms;
@@ -302,5 +226,84 @@ export class FarmsService {
       return existingCoordinate;
     }
   }
+
+  /*public async getAllFarm(sortBy: string = 'name'): Promise<Farm[] | []> {
+    if (sortBy === 'date') {
+      sortBy = 'createdAt';
+    }
+    
+    const farms = await this.farmsRepository.find({
+      relations: {  
+        user: {
+          address: {
+            coordinate: true
+          }
+        },
+        address: {
+          coordinate: true
+        }
+      },
+      order: {
+        name: 'ASC'
+      }
+
+    });
+    return farms;
+  }*/
+
+  /*
+  public async findAll(sortBy: string, outlierCondition: true | false, page: number = 1, pageSize: number = 10) {
+    try {
+      let rawQuery = `
+        SELECT * FROM 
+          (
+            SELECT
+              f.name AS name,
+              f.size AS size,
+              f.yield AS yield,
+              -- f.createdAt as cdate,
+              u.email AS email, 
+              fa.street AS street,
+              fa.city AS city,
+              fa.country AS country,
+              fc.latitude AS f_latitude,
+              fc.longitude AS f_longitude,
+              uc.latitude AS u_latitude,
+              uc.longitude AS u_longitude,
+              (SELECT AVG("yield")*0.3 FROM "farm" "aa") AS "avg_yield",
+              (SELECT size FROM "farm" "ab" WHERE ab.id = "f"."id") AS "driving_distance" 
+            FROM "farm" AS "f"
+            LEFT JOIN "user" AS "u" ON "u"."id"="f"."userId"
+            LEFT JOIN "address" AS "fa" ON "fa"."id"="f"."addressId"
+            LEFT JOIN "coordinate" AS "fc" ON "fc"."id"="fa"."coordinateId"
+            LEFT JOIN "address" AS "ua" ON "ua"."id"="u"."addressId" 
+            LEFT JOIN "coordinate" as "uc" ON "uc"."id"="ua"."coordinateId") "fd"
+      `;
+      // Outlier condition
+      rawQuery = this.addOutlierCondition(rawQuery, outlierCondition);
+      rawQuery = this.addLimitAndOffset(rawQuery, page, pageSize);
+      
+      const result = await this.farmsRepository.query(rawQuery);
+      let farms = await this.addDrivingDistanceToFarm(result)
+      return this.sortResult(farms, sortBy);
+    } catch (error) {
+      console.log(error)
+    }
+    return [];
+  }
+
+  private addOutlierCondition(rawQuery: string, outlierCondition: true | false) {
+    return rawQuery += outlierCondition ? `WHERE yield > avg_yield` : `WHERE yield < avg_yield`;
+  }
+
+  private addLimitAndOffset(rawQuery: string, page: number = 1, pageSize: number = 10) {
+    if (page > 1) {
+      rawQuery += ` LIMIT ` + pageSize + ` OFFSET ` + page;
+    } else {
+      rawQuery += ` LIMIT ` + pageSize;
+    }
+    return rawQuery;
+  }
+ */
 
 }
