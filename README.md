@@ -72,3 +72,42 @@ Migration scripts:
 Swagger will be available on http://localhost:3000/docs by default
 
 You can find swagger documentation [here](https://swagger.io/docs/specification/about/)
+
+## Rate limiting in Node.js and NestJS to prevent abuse of your API by limiting the number of requests made by a client within a certain timeframe
+
+One of the popular package for rate limiting is express-rate-limit.
+
+Here's how you we can implement rate limiting:
+- First, install the express-rate-limit package using npm : `npm install express-rate-limit`
+- Create a rate-limiting middleware in your application. For example, you can create a file named `rate-limit.middleware.ts`:
+	```
+  import { NestMiddleware, Injectable } from '@nestjs/common';
+	import * as rateLimit from 'express-rate-limit';
+
+	@Injectable()
+	export class RateLimitMiddleware implements NestMiddleware {
+	  use(req: any, res: any, next: () => void) {
+		const limiter = rateLimit({
+		  windowMs: 10000, // 10 seconds
+		  max: 10, // limit each IP to 100 requests per windowMs
+		  message: 'Too many requests, please try again later.',
+		});
+		limiter(req, res, next);
+	  }
+	}
+  ```
+  In this example, the rate limit is set to 10 requests per 10 seconds for each IP address. Adjust the windowMs and max properties according to your requirements.
+- Register the RateLimitMiddleware in your application module app module:
+	```
+  import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+	import { RateLimitMiddleware } from './rate-limit.middleware';
+
+	@Module({
+	  // Your module configuration
+	})
+	export class AppModule implements NestModule {
+	  configure(consumer: MiddlewareConsumer) {
+		consumer.apply(RateLimitMiddleware).forRoutes('*');
+	  }
+	}```
+	This configuration will apply the rate-limiting middleware to all routes ('*') in your NestJS application. Requests that exceed the rate limit will receive a response with a status code of 429 and the message 'Too many requests, please try again later.'

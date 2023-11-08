@@ -24,7 +24,7 @@ export class CodeexercisesController {
 
   public stringCheck(req: Request, res: Response, next: NextFunction) {
     try {
-      let query = require("url").parse(req.url,true).query;
+      let query = require("url").parse(req.url, true).query;
       let result = false;
       const regex = /\d/;
       if (regex.test(query.inputString)) {
@@ -39,7 +39,7 @@ export class CodeexercisesController {
   public listFileNames(req: Request, res: Response, next: NextFunction) {
     try {
       const fs = require("fs");
-      let query = require("url").parse(req.url,true).query;
+      let query = require("url").parse(req.url, true).query;
       fs.access("./" + query.folderName, fs.constants.F_OK, (err: any) => {
         if (err) {
             res.status(404).send("Folder not found");

@@ -1,7 +1,7 @@
 import { DeepPartial, Repository } from "typeorm";
 import { Farm } from "./entities/farm.entity";
 import dataSource from "orm/orm.config";
-import axios from 'axios';
+import axios from "axios";
 import { CreateFarmDto } from "./dto/create-farm.dto";
 import { UnprocessableEntityError } from "errors/errors";
 import { CreateAddressDto } from "modules/addresses/dto/create-address.dto";
@@ -28,7 +28,7 @@ export class FarmsService {
   }
 
   public async fetchAllFarms(
-    sortBy: string = 'name',
+    sortBy: string = "name",
     outlierCondition: boolean = true,
     page: number = 1,
     pageSize: number = 10
@@ -48,39 +48,37 @@ export class FarmsService {
         const userQb = await this.farmsRepository
           .createQueryBuilder("f")
           .select([
-            'name', 'size', 'yield', 'email', 'uc.latitude' as 'u_latitude', 'uc.longitude' as 'u_longitude',
-            'fa.street' as 'f_street', 'fa.city' as 'f_cityt', 'fa.country' as 'f_country', 
-            'fc.latitude' as 'f_latitude', 'fc.longitude' as 'f_longitude', 'f.createdAt' as 'createdAt'
+            "name", "size", "yield", "email", "uc.latitude" as "u_latitude", "uc.longitude" as "u_longitude",
+            "fa.street" as "f_street", "fa.city" as "f_cityt", "fa.country" as "f_country", 
+            "fc.latitude" as "f_latitude", "fc.longitude" as "f_longitude", "f.createdAt" as "createdAt"
           ])
           .addSelect((subQuery) => {
             return subQuery.select('AVG("yield")*0.3').from("farm", "aa")
           }, "avg_yield")
           .addSelect((subQuery) => {
-            return subQuery.select('size').from("farm", "ab").where("ab.id = f.id")
+            return subQuery.select("size").from("farm", "ab").where("ab.id = f.id")
           }, "driving_distance")
-          .leftJoin('f.user', 'u')
-          .leftJoin('f.address', 'fa')
-          .leftJoin('fa.coordinate', 'fc')
-          .leftJoin('u.address', 'ua')
-          .leftJoin('ua.coordinate', 'uc');
+          .leftJoin("f.user", "u")
+          .leftJoin("f.address", "fa")
+          .leftJoin("fa.coordinate", "fc")
+          .leftJoin("u.address", "ua")
+          .leftJoin("ua.coordinate", "uc");
 
          let result = dataSource
           .createQueryBuilder()
           .select("*")
           .from("(" + userQb.getQuery() + ")", "d");
 
-          console.log(outlierCondition);
           // Outlier condition
-          //outlierCondition ? result.where("yield > avg_yield") : result.where("yield < avg_yield");
+          outlierCondition ? result.where("yield > avg_yield") : result.where("yield < avg_yield");
           
-          console.log(result.getQuery());
           const farms = await result
            .offset((pageSize * page) - pageSize)
            .limit(pageSize)
            .getRawMany();
 
           let allFarms = await this.addDrivingDistanceToFarm(farms)
-          console.log(allFarms);
+          
           // Add sort on final output. 
           // I know performance wise its not better do here, but we have 3 different type of sorts. In this case I feel this is the wise way
           return this.sortResult(allFarms, sortBy);
@@ -227,9 +225,9 @@ export class FarmsService {
     }
   }
 
-  /*public async getAllFarm(sortBy: string = 'name'): Promise<Farm[] | []> {
-    if (sortBy === 'date') {
-      sortBy = 'createdAt';
+  /*public async getAllFarm(sortBy: string = "name"): Promise<Farm[] | []> {
+    if (sortBy === "date") {
+      sortBy = "createdAt";
     }
     
     const farms = await this.farmsRepository.find({
@@ -244,7 +242,7 @@ export class FarmsService {
         }
       },
       order: {
-        name: 'ASC'
+        name: "ASC"
       }
 
     });
