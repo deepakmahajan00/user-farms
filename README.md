@@ -109,5 +109,6 @@ Here's how you we can implement rate limiting:
 	  configure(consumer: MiddlewareConsumer) {
 		consumer.apply(RateLimitMiddleware).forRoutes('*');
 	  }
-	}```
+	}
+  ```
 	This configuration will apply the rate-limiting middleware to all routes ('*') in your NestJS application. Requests that exceed the rate limit will receive a response with a status code of 429 and the message 'Too many requests, please try again later.'
