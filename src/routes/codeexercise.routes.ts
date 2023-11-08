@@ -4,8 +4,6 @@ import { CodeexercisesController } from "modules/codeexercises/codeexercises.con
 const router = Router();
 const codeexercisesController = new CodeexercisesController();
 
-
-
 /**
  * @openapi
  * '/api/codeexercises/transform':
@@ -14,12 +12,8 @@ const codeexercisesController = new CodeexercisesController();
  *       - CodeExercises
  *     summary: Transform array to containing number and strings. e.g ['super', '20.5', 'test', '23' ] -> ['super', 20.5, 'test', 23 ]
  *     responses:
- *      201:
+ *      200:
  *        description: Success
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/UserDto'
  *      400:
  *        description: Bad request
  */
@@ -41,12 +35,8 @@ router.get("/transform", codeexercisesController.transform.bind(codeexercisesCon
  *          default: test-string23
  *        required: true
  *     responses:
- *      201:
+ *      200:
  *        description: Success
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/UserDto'
  *      400:
  *        description: Bad request
  */
@@ -77,10 +67,6 @@ router.get("/stringCheck", codeexercisesController.stringCheck.bind(codeexercise
  *     responses:
  *      201:
  *        description: Success
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/UserDto'
  *      400:
  *        description: Bad request
  */

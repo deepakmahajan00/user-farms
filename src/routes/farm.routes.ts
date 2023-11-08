@@ -53,6 +53,7 @@ const farmsController = new FarmsController();
  *        description: Bad request
  *      404:
  *        description: Not Found
+ *     
  */
 router.get("/", farmsController.list.bind(farmsController) as RequestHandler);
 
