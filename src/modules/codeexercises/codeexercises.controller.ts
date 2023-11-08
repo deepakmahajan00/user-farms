@@ -5,17 +5,17 @@ export class CodeexercisesController {
   public transform(req: Request, res: Response, next: NextFunction) {
     try {
       console.log(req);
-      const data: any = ["super", "20.5", "test", "23"];
+      const data: any[] = ["super", "20.5", "test", "23"];
 
-      for (const key in data) {
+      data.forEach(function(value, index) {
         // This line will transform values having number values
         // and for string type this will return NaN
         // i.e '20.5' & '23'
-        const newValue = parseFloat(data[key]);
+        const newValue = parseFloat(value);
 
         // if Nan, i.e string, take it as it is and if not NaN take newly converted value.
-        data[key] = isNaN(newValue) ? data[key] : newValue;
-      }
+        data[index] = isNaN(newValue) ? value : newValue;
+      });
       res.status(200).send(data);
     } catch (error) {
       next(error);
@@ -24,7 +24,7 @@ export class CodeexercisesController {
 
   public stringCheck(req: Request, res: Response, next: NextFunction) {
     try {
-      let query = require("url").parse(req.url, true).query;
+      const query = require("url").parse(req.url, true).query;
       let result = false;
       const regex = /\d/;
       if (regex.test(query.inputString)) {
@@ -39,7 +39,7 @@ export class CodeexercisesController {
   public listFileNames(req: Request, res: Response, next: NextFunction) {
     try {
       const fs = require("fs");
-      let query = require("url").parse(req.url, true).query;
+      const query = require("url").parse(req.url, true).query;
       fs.access("./" + query.folderName, fs.constants.F_OK, (err: any) => {
         if (err) {
             res.status(404).send("Folder not found");

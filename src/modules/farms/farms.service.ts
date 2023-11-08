@@ -60,7 +60,7 @@ export class FarmsService {
           .leftJoin("u.address", "ua")
           .leftJoin("ua.coordinate", "uc");
 
-         let result = dataSource
+         const result = dataSource
           .createQueryBuilder()
           .select("*")
           .from("(" + userQb.getQuery() + ")", "d");
@@ -73,7 +73,7 @@ export class FarmsService {
            .limit(pageSize)
            .getRawMany();
 
-          let allFarms = await this.addDrivingDistanceToFarm(farms)
+          const allFarms = await this.addDrivingDistanceToFarm(farms)
           
           // Add sort on final output. 
           // I know performance wise its not better do here, but we have 3 different type of sorts. In this case I feel this is the wise way
@@ -96,8 +96,8 @@ export class FarmsService {
 
   private sortByFarmNameASC(farms: any) {
     farms.sort((a: any, b: any) => {
-      var valueA = a.name;
-      var valueB = b.name;
+      const valueA = a.name;
+      const valueB = b.name;
       return valueA - valueB;
     });
     return farms;
@@ -105,8 +105,8 @@ export class FarmsService {
 
   private sortByNewlyCreatedFarm(farms: any) {
     farms.sort((a: any, b: any) => {
-      var valueA = a.f_createdAt;
-      var valueB = b.f_createdAt;
+      const valueA = a.f_createdAt;
+      const valueB = b.f_createdAt;
       return valueB - valueA;
     });
     return farms;
@@ -114,8 +114,8 @@ export class FarmsService {
 
   private sortByDrivingDistance(farms: any) {
     farms.sort((a: any, b: any) => {
-      var valueA = a.driving_distance.value;
-      var valueB = b.driving_distance.value;
+      const valueA = a.driving_distance.value;
+      const valueB = b.driving_distance.value;
       if (valueA < valueB) {
           return -1;
       } else if (valueA > valueB) {
@@ -129,14 +129,14 @@ export class FarmsService {
 
   private async addDrivingDistanceToFarm(farms: any): Promise<any[]> {
     for (const key in farms) {
-      let distance = await this.getDrivingDistance(
+      const distance = await this.getDrivingDistance(
         farms[key].fc_latitude,
         farms[key].fc_longitude,
         farms[key].uc_latitude,
         farms[key].uc_longitude
       );
       farms[key].driving_distance = distance;
-    };
+    }
     return farms;
   }
   

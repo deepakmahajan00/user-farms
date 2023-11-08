@@ -31,7 +31,12 @@ export class AddressesService {
   public async saveAndGetAddressId(address: CreateAddressDto, coordinate: CreateCoordinateDto): Promise<CreateAddressDto> {
     const existingAddress = await this.findOneBy({ street: address.street, city: address.city, country: address.country });
     if (!existingAddress) {
-      const addressData: DeepPartial<Address> = { street: address.street, city: address.city, country: address.country, coordinate: coordinate };
+      const addressData: DeepPartial<Address> = {
+        street: address.street,
+        city: address.city,
+        country: address.country,
+        coordinate: coordinate
+      };
       const saveCoordinateData = await this.createAddress(addressData as CreateAddressDto);
       return saveCoordinateData;
     } else {
