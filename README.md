@@ -33,10 +33,12 @@ Make sure to run the migrations before running the app (see Migrations section b
 
 ### Development:
 
+- Add GOOGLE_API_KEY in .env to fetch google distance matrix data
 - To start the project in dev mode, run `npm run start:dev`
 
 ### Production:
 
+- Add GOOGLE_API_KEY in .env to fetch google distance matrix data
 - To build the project, run `npm run build`
 - To start the project in prod mode, run `npm run start:prod`
 

@@ -9,6 +9,8 @@ import { setupServer } from "server/server";
 import { clearDatabase, disconnectAndClearDatabase } from "helpers/utils";
 import { LoginUserDto } from "../dto/login-user.dto";
 import { AccessToken } from "../entities/access-token.entity";
+import { CreateCoordinateDto } from "modules/coordinates/dto/create-coordinate.dto";
+import { CreateAddressDto } from "modules/addresses/dto/create-address.dto";
 
 describe("AuthController", () => {
   let app: Express;
@@ -36,12 +38,16 @@ describe("AuthController", () => {
     usersService = new UsersService();
   });
 
+  const coordinate: CreateCoordinateDto = {latitude: 15.10, longitude:16.10};
+  const address: CreateAddressDto = {coordinate: coordinate, street: "City 2", city: "Taastrup", country: "Denmark"};
+   const createUserDto: CreateUserDto = { email: "user@test.com", password: "password", address: address };
+
   describe("POST /auth", () => {
     const createUser = async (userDto: CreateUserDto) => usersService.createUser(userDto);
     const loginDto: LoginUserDto = { email: "user@test.com", password: "password" };
 
     it("should login existing user", async () => {
-      await createUser(loginDto);
+      await createUser(createUserDto);
 
       const res = await agent.post("/api/auth/login").send(loginDto);
       const { token } = res.body as AccessToken;
@@ -61,7 +67,7 @@ describe("AuthController", () => {
     });
 
     it("should throw UnprocessableEntityError when user logs in with invalid password", async () => {
-      await createUser(loginDto);
+      await createUser(createUserDto);
 
       const res = await agent.post("/api/auth/login").send({ email: loginDto.email, password: "invalidPassword" });
 

@@ -6,7 +6,10 @@ import { clearDatabase, disconnectAndClearDatabase } from "helpers/utils";
 import http from "http";
 import { decode, sign } from "jsonwebtoken";
 import { ExtendedRequest, authMiddleware } from "middlewares/auth.middleware";
+import { CreateAddressDto } from "modules/addresses/dto/create-address.dto";
 import { AccessToken } from "modules/auth/entities/access-token.entity";
+import { CreateCoordinateDto } from "modules/coordinates/dto/create-coordinate.dto";
+import { CreateUserDto } from "modules/users/dto/create-user.dto";
 import { User } from "modules/users/entities/user.entity";
 import { UsersService } from "modules/users/users.service";
 import ds from "orm/orm.config";
@@ -58,8 +61,12 @@ describe("AuthMiddleware", () => {
     accessTokenRepository = ds.getRepository(AccessToken);
   });
 
+  const coordinate: CreateCoordinateDto = {latitude: 15.10, longitude:16.10};
+  const address: CreateAddressDto = {coordinate: coordinate, street: "City 2", city: "Taastrup", country: "Denmark"};
+  const createUserDto: CreateUserDto = { email: "user@test.com", password: "pwd", address: address };
+
   it("should validate existing token with given token", async () => {
-    const user = await usersService.createUser({ email: "user@test.com", password: "pwd" });
+    const user = await usersService.createUser(createUserDto);
     const { token } = await signAsync(user);
 
     const req = { headers: { authorization: `Bearer ${token}` } } as ExtendedRequest;

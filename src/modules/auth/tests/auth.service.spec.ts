@@ -9,6 +9,8 @@ import ds from "orm/orm.config";
 import { AuthService } from "../auth.service";
 import { LoginUserDto } from "../dto/login-user.dto";
 import http, { Server } from "http";
+import { CreateCoordinateDto } from "modules/coordinates/dto/create-coordinate.dto";
+import { CreateAddressDto } from "modules/addresses/dto/create-address.dto";
 
 describe("AuthService", () => {
   let app: Express;
@@ -35,12 +37,16 @@ describe("AuthService", () => {
     authService = new AuthService();
   });
 
+  const coordinate: CreateCoordinateDto = {latitude: 15.10, longitude:16.10};
+  const address: CreateAddressDto = {coordinate: coordinate, street: "City 2", city: "Taastrup", country: "Denmark"};
+  const createUserDto: CreateUserDto = { email: "user@test.com", password: "password", address: address };
+
   describe(".login", () => {
     const loginDto: LoginUserDto = { email: "user@test.com", password: "password" };
     const createUser = async (userDto: CreateUserDto) => usersService.createUser(userDto);
 
     it("should create access token for existing user", async () => {
-      await createUser(loginDto);
+      await createUser(createUserDto);
 
       const { token } = await authService.login(loginDto);
 
@@ -55,7 +61,7 @@ describe("AuthService", () => {
     });
 
     it("should throw UnprocessableEntityError when user logs in with invalid password", async () => {
-      await createUser(loginDto);
+      await createUser(createUserDto);
 
       await authService.login({ email: loginDto.email, password: "invalidPassword" }).catch((error: UnprocessableEntityError) => {
         expect(error).toBeInstanceOf(UnprocessableEntityError);

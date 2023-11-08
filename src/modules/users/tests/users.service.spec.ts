@@ -8,6 +8,8 @@ import ds from "orm/orm.config";
 import { CreateUserDto } from "../dto/create-user.dto";
 import { User } from "../entities/user.entity";
 import { UsersService } from "../users.service";
+import { CreateCoordinateDto } from "modules/coordinates/dto/create-coordinate.dto";
+import { CreateAddressDto } from "modules/addresses/dto/create-address.dto";
 
 describe("UsersController", () => {
   let app: Express;
@@ -32,9 +34,11 @@ describe("UsersController", () => {
     usersService = new UsersService();
   });
 
-  describe(".createUser", () => {
-    const createUserDto: CreateUserDto = { email: "user@test.com", password: "password" };
+  const coordinate: CreateCoordinateDto = {latitude: 15.10, longitude:16.10};
+  const address: CreateAddressDto = {coordinate: coordinate, street: "City 2", city: "Taastrup", country: "Denmark"};
+  const createUserDto: CreateUserDto = { email: "user@test.com", password: "password", address: address };
 
+  describe(".createUser", () => {
     it("should create new user", async () => {
       const createdUser = await usersService.createUser(createUserDto);
       expect(createdUser).toBeInstanceOf(User);
@@ -55,8 +59,6 @@ describe("UsersController", () => {
   });
 
   describe(".findOneBy", () => {
-    const createUserDto: CreateUserDto = { email: "user@test.com", password: "password" };
-
     it("should get user by provided param", async () => {
       const user = await usersService.createUser(createUserDto);
       const foundUser = await usersService.findOneBy({ email: user?.email });

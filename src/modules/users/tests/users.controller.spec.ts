@@ -7,6 +7,8 @@ import ds from "orm/orm.config";
 import supertest, { SuperAgentTest } from "supertest";
 import { CreateUserDto } from "../dto/create-user.dto";
 import { UsersService } from "../users.service";
+import { CreateAddressDto } from "modules/addresses/dto/create-address.dto";
+import { CreateCoordinateDto } from "modules/coordinates/dto/create-coordinate.dto";
 
 describe("UsersController", () => {
   let app: Express;
@@ -35,7 +37,9 @@ describe("UsersController", () => {
   });
 
   describe("POST /users", () => {
-    const createUserDto: CreateUserDto = { email: "user@test.com", password: "password" };
+    const coordinate: CreateCoordinateDto = {latitude: 15.10, longitude:16.10};
+    const address: CreateAddressDto = {coordinate: coordinate, street: "City 2", city: "Taastrup", country: "Denmark"};
+    const createUserDto: CreateUserDto = { email: "user@test.com", password: "password", address: address };
 
     it("should create new user", async () => {
       const res = await agent.post("/api/users").send(createUserDto);
