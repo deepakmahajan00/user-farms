@@ -4,12 +4,8 @@ import dataSource from "orm/orm.config";
 import axios from "axios";
 import { CreateFarmDto } from "./dto/create-farm.dto";
 import { UnprocessableEntityError } from "errors/errors";
-import { CreateAddressDto } from "modules/addresses/dto/create-address.dto";
-import { CreateCoordinateDto } from "modules/coordinates/dto/create-coordinate.dto";
 import { AddressesService } from "modules/addresses/addresses.service";
 import { CoordinatesService } from "modules/coordinates/coordinates.service";
-import { Address } from "modules/addresses/entities/address.entity";
-import { Coordinate } from "modules/coordinates/entities/coordinate.entity";
 import { UsersService } from "modules/users/users.service";
 import { ListFarmDto } from "./dto/list-farm.dto";
 import config from "config/config";
@@ -174,11 +170,8 @@ export class FarmsService {
       const existingFarm = await this.farmsRepository.findOneBy({ ...farmData });
       if (existingFarm) throw new UnprocessableEntityError("A farm with same name already exists on coordinates");
 
-      const coordinateObj = await this.saveAndGetCoordinateId(data.address.coordinate);
-      const addressObj = await this.saveAndGetAddressId(data.address, coordinateObj);
-
-      console.log(coordinateObj);
-      console.log(addressObj);
+      const coordinateObj = await this.coordinatesService.saveAndGetCoordinateId(data.address.coordinate);
+      const addressObj = await this.addressesService.saveAndGetAddressId(data.address, coordinateObj);
 
       const farmDeepData: DeepPartial<Farm> = { name: data.name, size: data.size, yield: data.yield, address: addressObj, user: user };
       const newFarm = this.farmsRepository.create(farmDeepData);
@@ -188,41 +181,6 @@ export class FarmsService {
       console.log(error)
     }
     return null;
-  }
-
-  /**
-   * Function to save address if not existing and return coordinate id
-   * @param address 
-   * @param coordinate 
-   * @returns CreateAddressDto
-   */
-  private async saveAndGetAddressId(address: CreateAddressDto, coordinate: CreateCoordinateDto): Promise<CreateAddressDto> {
-    const existingAddress = await this.addressesService.findOneBy({ street: address.street, city: address.city, country: address.country });
-    if (!existingAddress) {
-      const addressData: DeepPartial<Address> = { street: address.street, city: address.city, country: address.country, coordinate: coordinate };
-      const saveCoordinateData = await this.addressesService.createAddress(addressData as CreateAddressDto);
-      return saveCoordinateData;
-    } else {
-      console.log("Address already exists");
-      return existingAddress;
-    }
-  }
-
-  /**
-   * Function to save coordinate if not existing and return coordinate id
-   * @param coordinate 
-   * @returns CreateCoordinateDto
-   */
-  private async saveAndGetCoordinateId(coordinate: CreateCoordinateDto | null): Promise<CreateCoordinateDto> {
-    const existingCoordinate = await this.coordinatesService.findOneBy({ latitude: coordinate?.latitude, longitude: coordinate?.longitude });
-    if (!existingCoordinate) {
-      const coordinateData: DeepPartial<Coordinate> = { latitude: coordinate?.latitude, longitude: coordinate?.longitude };
-      const savedCoordinateData = await this.coordinatesService.createCoordinate(coordinateData as CreateCoordinateDto);
-      return savedCoordinateData;
-    } else {
-      console.log("Coordinates already exists");
-      return existingCoordinate;
-    }
   }
 
   /*public async getAllFarm(sortBy: string = "name"): Promise<Farm[] | []> {

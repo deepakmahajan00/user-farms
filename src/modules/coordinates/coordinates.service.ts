@@ -21,4 +21,21 @@ export class CoordinatesService {
   public async findOneBy(param: FindOptionsWhere<Coordinate>): Promise<Coordinate | null> {
     return this.coordinatesRepository.findOneBy({ ...param });
   }
+
+  /**
+   * Function to save coordinate if not existing and return coordinate id
+   * @param coordinate 
+   * @returns CreateCoordinateDto
+   */
+  public async saveAndGetCoordinateId(coordinate: CreateCoordinateDto | null): Promise<CreateCoordinateDto> {
+    const existingCoordinate = await this.findOneBy({ latitude: coordinate?.latitude, longitude: coordinate?.longitude });
+    if (!existingCoordinate) {
+      const coordinateData: DeepPartial<Coordinate> = { latitude: coordinate?.latitude, longitude: coordinate?.longitude };
+      const savedCoordinateData = await this.createCoordinate(coordinateData as CreateCoordinateDto);
+      return savedCoordinateData;
+    } else {
+      console.log("Coordinates already exists");
+      return existingCoordinate;
+    }
+  }
 }
