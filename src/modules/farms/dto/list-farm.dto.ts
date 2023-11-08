@@ -91,7 +91,7 @@ export class ListFarmDto {
                 "latitude": data.fc_latitude,
                 "longitude": data.fc_longitude
             },
-            "driving_distance": data.driving_distance,
+            "driving_distance": data.driving_distance ? data.driving_distance : 'Data not available',
         }
     });
     return responseDto;

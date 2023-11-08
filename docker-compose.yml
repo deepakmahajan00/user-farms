@@ -28,7 +28,7 @@ services:
       - pgadmin:/.data/pgadmin
     ports:
       - "53610:53610"
-      - "8080:80"
+      - "8080:8080"
     networks:
       - postgres
 
