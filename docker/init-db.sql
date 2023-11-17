@@ -1,2 +1,2 @@
-CREATE DATABASE "userfarms-hw-dev";
-CREATE DATABASE "userfarms-hw-test";
+CREATE DATABASE "agreena-hw-dev";
+CREATE DATABASE "agreena-hw-test";
