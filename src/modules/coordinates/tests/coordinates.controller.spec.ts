@@ -44,9 +44,7 @@ describe("CoordinatesController", () => {
 
     usersService = new UsersService();
 
-    //await agent.post("/api/users").send(createUserDto)
-    const newUser = await usersService.createUser(createUserDto);
-    console.log(newUser);
+    await usersService.createUser(createUserDto);
     const response = await agent.post("/api/auth/login").send(loginDto);
     token = response.body as AccessToken;
 
