@@ -16,7 +16,7 @@
     "migration:revert": "npm run typeorm migration:revert",
     "migration:create": "typeorm migration:create ./src/modules/$npm_config_path/migrations/$npm_config_name",
     "prepare": "husky install",
-    "test": "cross-env NODE_ENV=test jest --runInBand --verbose --coverage",
+    "test": "NODE_ENV=test jest --runInBand --verbose --coverage",
     "test:watch": "NODE_ENV=test jest --runInBand --verbose --watch",
     "test:migration:show": "NODE_ENV=test npm run typeorm migration:show",
     "test:migration:run": "NODE_ENV=test npm run typeorm migration:run",

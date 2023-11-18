@@ -37,8 +37,8 @@ export class AddressesService {
         country: address.country,
         coordinate: coordinate
       };
-      const saveCoordinateData = await this.createAddress(addressData as CreateAddressDto);
-      return saveCoordinateData;
+      const saveAddressData = await this.createAddress(addressData as CreateAddressDto);
+      return saveAddressData;
     } else {
       console.log("Address already exists");
       return existingAddress;

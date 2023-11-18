@@ -17,15 +17,12 @@ export const authMiddleware = async (req: ExtendedRequest, _: Response, next: Ne
   
     const token = req.headers.authorization.split(" ")[1];
     const verifiedToken = await verifyAsync(token);
-  
     if (!verifiedToken) {
       throw new UnauthorizedError();
     }
   
     const existingToken = await authService.getAccessToken(token);
-  
     req.user = existingToken.user;
-  
     next();
   } catch (error) {
     next(error);

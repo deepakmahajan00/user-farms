@@ -177,7 +177,7 @@ export class FarmsService {
       
       return await this.farmsRepository.save(newFarm);
     } catch (error) {
-      console.log(error)
+      console.log(error.message)
     }
     return null;
   }

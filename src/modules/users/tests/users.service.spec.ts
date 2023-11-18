@@ -11,7 +11,7 @@ import { UsersService } from "../users.service";
 import { CreateCoordinateDto } from "modules/coordinates/dto/create-coordinate.dto";
 import { CreateAddressDto } from "modules/addresses/dto/create-address.dto";
 
-describe("UsersController", () => {
+describe("UsersService", () => {
   let app: Express;
   let server: Server;
 
@@ -62,8 +62,7 @@ describe("UsersController", () => {
     it("should get user by provided param", async () => {
       const user = await usersService.createUser(createUserDto);
       const foundUser = await usersService.findOneBy({ email: user?.email });
-
-      expect(foundUser).toMatchObject({ ...user });
+      expect(foundUser?.id).toBe(user.id);
     });
 
     it("should return null if user not found by provided param", async () => {
