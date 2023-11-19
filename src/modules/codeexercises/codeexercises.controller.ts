@@ -4,18 +4,18 @@ export class CodeexercisesController {
 
   public transform(req: Request, res: Response, next: NextFunction) {
     try {
-      console.log(req);
-      const data: any[] = ["super", "20.5", "test", "23"];
+      const data: any[] = req.body.inputArray;
+      if (data) {
+        data.forEach(function(value, index) {
+          // This line will transform values having number values
+          // and for string type this will return NaN
+          // i.e '20.5' & '23'
+          const newValue = parseFloat(value);
 
-      data.forEach(function(value, index) {
-        // This line will transform values having number values
-        // and for string type this will return NaN
-        // i.e '20.5' & '23'
-        const newValue = parseFloat(value);
-
-        // if Nan, i.e string, take it as it is and if not NaN take newly converted value.
-        data[index] = isNaN(newValue) ? value : newValue;
-      });
+          // if Nan, i.e string, take it as it is and if not NaN take newly converted value.
+          data[index] = isNaN(newValue) ? value : newValue;
+        });
+      }
       res.status(200).send(data);
     } catch (error) {
       next(error);

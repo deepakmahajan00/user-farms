@@ -172,7 +172,13 @@ export class FarmsService {
       const coordinateObj = await this.coordinatesService.saveAndGetCoordinateId(data.address.coordinate);
       const addressObj = await this.addressesService.saveAndGetAddressId(data.address, coordinateObj);
 
-      const farmDeepData: DeepPartial<Farm> = { name: data.name, size: data.size, yield: data.yield, address: addressObj, user: user };
+      const farmDeepData: DeepPartial<Farm> = {
+        name: data.name,
+        size: data.size,
+        yield: data.yield,
+        address: addressObj,
+        user: user
+      };
       const newFarm = this.farmsRepository.create(farmDeepData);
       
       return await this.farmsRepository.save(newFarm);

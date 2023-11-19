@@ -26,7 +26,7 @@ describe("FarmsController", () => {
   const address: CreateAddressDto = {coordinate: coordinate, street: "City 2", city: "Taastrup", country: "Denmark"};
   const createUser: CreateUserDto = { email: "authorizedUser@test.com", password: "password", address: address };
   const loginDto: LoginUserDto = { email: "authorizedUser@test.com", password: "password" };
-  const CreateFarm: CreateFarmDto = {name: 'Test farm', size: 20.20, yield: 8.9, email: 'authorizedUser@test.com', address: address}
+  const CreateFarm: CreateFarmDto = {name: "Test farm", size: 20.20, yield: 8.9, email: "authorizedUser@test.com", address: address}
 
   beforeAll(async () => {
     app = setupServer();
@@ -67,7 +67,7 @@ describe("FarmsController", () => {
     describe("POST Authorized /farms", () => {
 
         it("should return provided user not exists for farm", async () => {
-            const CreateFarmWithNotExistsUser: CreateFarmDto = {name: 'Test A farm', size: 20.20, yield: 8.9, email: 'user1@test.com', address: address};
+            const CreateFarmWithNotExistsUser: CreateFarmDto = {name: "Test A farm", size: 20.20, yield: 8.9, email: "user1@test.com", address: address};
 
             await agent.post("/api/farms")
             .set("Authorization", `Bearer ${token.token}`)
@@ -79,7 +79,7 @@ describe("FarmsController", () => {
         });
 
         it("should return farm exists with same name", async () => {
-            const CreateFarm: CreateFarmDto = {name: 'Test Z farm', size: 20.20, yield: 8.9, email: 'authorizedUser@test.com', address: address}
+            const CreateFarm: CreateFarmDto = {name: "Test Z farm", size: 20.20, yield: 8.9, email: "authorizedUser@test.com", address: address}
             await agent.post("/api/farms")
             .set("Authorization", `Bearer ${token.token}`)
             .send(CreateFarm);
@@ -98,7 +98,7 @@ describe("FarmsController", () => {
         it("should create farm", async () => {
             const createUser: CreateUserDto = { email: "farm-user@test.com", password: "password", address: address };
             await usersService.createUser(createUser);
-            const CreateFarm: CreateFarmDto = {name: 'Test B farm', size: 20.20, yield: 8.9, email: 'farm-user@test.com', address: address}
+            const CreateFarm: CreateFarmDto = {name: "Test B farm", size: 20.20, yield: 8.9, email: "farm-user@test.com", address: address}
             
             const res = await agent.post("/api/farms")
             .set("Authorization", `Bearer ${token.token}`)

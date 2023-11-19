@@ -30,21 +30,42 @@ describe("CodeexercisesController", () => {
   });
 
   describe("POST /codeexercises/transform", () => {
-    it("should return correct trasnform", async () => {
-      await agent.get("/api/codeexercises/transform")
-      .expect(200)
-      .then((res) => {
-        expect(res.body).toEqual(["super", 20.5, "test", 23]);
-      });
+    it("should return not found api", async () => {
+      await agent.get("/codeexercises/transform")
+      .expect(404);
     });
 
-    it("should return not found api", async () => {
-        await agent.get("/codeexercises/transform")
-        .expect(404);
-      });
+    it("should return correct trasnform", async () => {
+      const requestBody = {
+        inputArray: ["super", "20.5", "test", "23"]
+      };
+      const result: any[] = ["super", 20.5, "test", 23];
+      const resp = await agent.post("/api/codeexercises/transform").send(requestBody)
+      expect(resp.statusCode).toBe(200);
+      expect(resp.body).toEqual(result);
+    });
+
+    it("should return empty trasnform", async () => {
+      const requestBody = {
+        inputArray: []
+      };
+      const result: any[] = [];
+      const resp = await agent.post("/api/codeexercises/transform").send(requestBody)
+      expect(resp.statusCode).toBe(200);
+      expect(resp.body).toEqual(result);
+    });
+
+    it("should return empty if we send wrong body trasnform", async () => {
+      const requestBody = {
+        wrongParam: []
+      };
+      const resp = await agent.post("/api/codeexercises/transform").send(requestBody)
+      expect(resp.statusCode).toBe(200);
+      expect(resp.body).toEqual({});
+    });
   });
 
-  describe("POST /codeexercises/stringCheck", () => {
+  describe("GET /codeexercises/stringCheck", () => {
     it("should return string check TRUE", async () => {
       const inputString = "test-string23";
       await agent.get("/api/codeexercises/stringCheck")
@@ -71,7 +92,7 @@ describe("CodeexercisesController", () => {
       });
   });
 
-  describe("POST /codeexercises/listFileNames", () => {
+  describe("GET /codeexercises/listFileNames", () => {
     it("should return correct listFileNames", async () => {
       const folderName = "files";
       const extension = "csv";

@@ -50,7 +50,7 @@ describe("AddressesService", () => {
         street: expect.any(String),
         city: expect.any(String),
         country: expect.any(String),
-        coordinate: expect.objectContaining({latitude: 15.10, longitude:16.10}),
+        coordinate: expect.objectContaining({latitude: 15.10, longitude:16.10}) as CreateCoordinateDto,
         createdAt: expect.any(Date),
         updatedAt: expect.any(Date),
       });

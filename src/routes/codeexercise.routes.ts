@@ -7,17 +7,28 @@ const codeexercisesController = new CodeexercisesController();
 /**
  * @openapi
  * '/api/codeexercises/transform':
- *  get:
+ *  post:
  *     tags:
  *       - CodeExercises
- *     summary: Transform array to containing number and strings. e.g ['super', '20.5', 'test', '23' ] -> ['super', 20.5, 'test', 23 ]
+ *     summary: Transform array to containing number and strings. e.g ['super','20.5','test','23'] -> ['super',20.5,'test',23]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                inputArray:
+ *                   type: array
+ *                   required: true
+ *                   default: ['super','20.5','test','23']
  *     responses:
  *      200:
  *        description: Success
  *      400:
  *        description: Bad request
  */
-router.get("/transform", codeexercisesController.transform.bind(codeexercisesController) as RequestHandler);
+router.post("/transform", codeexercisesController.transform.bind(codeexercisesController) as RequestHandler);
 
 /**
  * @openapi
